@@ -25,18 +25,20 @@
 #include "commonauto/steps/Stop.h"
 #include "commonauto/steps/ResetNavXYaw.h"
 #include "commonauto/steps/CalibrateNavXThenReset.h"
+#include "commonauto/steps/MoveAndTurn.h"
 #include "Auto/SetArm.h"
-#include "Auto/SetArm2.h"
 #include "Auto/SetClaw.h"
 #include "Auto/SetClaw2.h"
-#include "Auto/SwitchPneumatics.h"
-
+#include "Auto/level.h"
+#include "Auto/level2.h"
+#include "Auto/level3.h"
+#include "Auto/AutoPlan.h"
 
 frc::Joystick* playerOne;
 frc::XboxController* playerTwo;
 AutoSequence* bigSequence;
 frc::SendableChooser<std::string>* autoChooser;
-
+frc::AnalogPotentiometer *m_ClawPotentiometer;
 void Robot::RobotInit() {
 playerOne = new frc::Joystick(R_controllerPortPlayerOne);
 playerTwo = new frc::XboxController(R_controllerPortPlayerTwo);
@@ -45,10 +47,14 @@ frc::SmartDashboard::PutNumber("Distance of the Claw Acuator", .15);
 frc::CameraServer::StartAutomaticCapture();
 
 autoChooser = new frc::SendableChooser<std::string>;
-autoChooser->AddOption("one cone", "one cone");
-autoChooser->AddOption("cube and platform", "cp");
-autoChooser->AddOption("two ball sides", "2bs");
-autoChooser->SetDefaultOption("tri-ball", "tb");
+autoChooser->AddOption("move backwards", "move backwards");
+autoChooser->AddOption("mid right", "mid right");
+autoChooser->AddOption("level", "level");
+autoChooser->AddOption("double left", "double left");
+autoChooser->AddOption("double right", "double right");
+autoChooser->AddOption("test triple","test triple");
+autoChooser->AddOption("test double level","test double level");
+autoChooser->AddOption("test movement", "test movement");
 frc::SmartDashboard::PutData(autoChooser);
 
 bigSequence = new AutoSequence(false);
@@ -82,47 +88,213 @@ void Robot::AutonomousInit() {
     bigSequence->Reset();
 
     std::string selectedAuto = autoChooser->GetSelected();
-    
-    if (selectedAuto == "one cone") {
-    bigSequence->AddStep(new CalibrateNavXThenReset);
-    bigSequence->AddStep(new WaitSeconds(1));
-    bigSequence->AddStep(new ResetNavXYaw);
+    //Braylon's auto have been changed recently, ask what the auto does
+    //and where it should start because it has been changed since of 4/15/23
+    if (selectedAuto == "move backwards") {
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(1));
+      bigSequence->AddStep(new ResetNavXYaw);
 
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.2));
+      bigSequence->AddStep(new SetArm(0));
 
-    bigSequence->AddStep(new SetArm2(.5));
-    bigSequence->AddStep(new SetClaw2(.3));
-    //bigSequence->AddStep(new WaitSeconds(.75));
-    //bigSequence->AddStep(new TimeDriveHold(0, .25, 2));
-    bigSequence->AddStep(new SwitchPneumatics());
-    bigSequence->AddStep(new WaitSeconds(.5));
-    bigSequence->AddStep(new TimeDriveHold(0, -.5, 3.5));
+      bigSequence->AddStep(new WaitSeconds(.3));
+      bigSequence->AddStep(new TimeDriveHold(0, -0.6, 3.65));
+
     SwerveTrain::GetInstance().SetSwerveBrake(true);
     SwerveTrain::GetInstance().SetDriveBrake(true);
 
     bigSequence->AddStep(new WaitSeconds(20));
     }
-    else if(selectedAuto == "cp"){
+    else if(selectedAuto == "mid right"){
       bigSequence->AddStep(new CalibrateNavXThenReset);
       bigSequence->AddStep(new WaitSeconds(1));
       bigSequence->AddStep(new ResetNavXYaw);
 
+    bigSequence->AddStep(new TimeDriveHold(-.75, 0, 2));
+    bigSequence->AddStep(new TimeDriveHold(0, -.5, 3.5));
+    bigSequence->AddStep(new TimeDriveHold(.75, 0, 2));
 
-      bigSequence->AddStep(new SetArm2(.45));
-      bigSequence->AddStep(new SetClaw2(.3));
-      //bigSequence->AddStep(new WaitSeconds(.75));
-      //bigSequence->AddStep(new TimeDriveHold(0, .25, 2));
-      bigSequence->AddStep(new SwitchPneumatics());
+      SwerveTrain::GetInstance().SetSwerveBrake(true);
+      SwerveTrain::GetInstance().SetDriveBrake(true);
+
+      bigSequence->AddStep(new WaitSeconds(20));
+    }
+    else if (selectedAuto == "level") {
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(1));
+      bigSequence->AddStep(new ResetNavXYaw);
+
+      bigSequence->AddStep(new SetArm(-.75));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+
+      bigSequence->AddStep(new WaitSeconds(.2));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(180));
+      bigSequence->AddStep(new TimeDriveHold(0, -.5 , 4));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(90));
+      bigSequence->AddStep(new TimeDriveHold(0, .6, 2.4));
+      bigSequence->AddStep(new level2());
+      bigSequence->AddStep(new WaitSeconds(1));
+      bigSequence->AddStep(new TimeDriveHold(.05, 0, .5));
+   //   bigSequence->AddStep(new level2());
+   //   bigSequence->AddStep(new level2());
+
+  //    bigSequence->AddStep(new level2());
+      bigSequence->AddStep(new WaitSeconds(20));
+    }
+    else if (selectedAuto == "double left") {
+      bigSequence->AddStep(new CalibrateNavXThenReset);
       bigSequence->AddStep(new WaitSeconds(.5));
+      bigSequence->AddStep(new ResetNavXYaw);
+      bigSequence->AddStep(new TurnToAbsoluteAngle(-15));
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+
+      bigSequence->AddStep(new WaitSeconds(.2));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(185));
+      bigSequence->AddStep(new WaitSeconds(.1));
+
+      bigSequence->AddStep(new SetArm(.5));
+      bigSequence->AddStep(new SetClaw(-.5));
+      bigSequence->AddStep(new TimeDriveHold(0.08, -1, 2.7));
+
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(.05));
       bigSequence->AddStep(new SetClaw(1));
-      bigSequence->AddStep(new SetArm(1));
-      bigSequence->AddStep(new TimeDriveHold(0, -.75, 2.5));
+
+      bigSequence->AddStep(new TurnToAbsoluteAngle(15));
+      bigSequence->AddStep(new WaitSeconds(.15));
+ 
+      bigSequence->AddStep(new SetClaw(0));   
+
+      bigSequence->AddStep(new TimeDriveHold(-0.08, 1, 2.7));
+      bigSequence->AddStep(new SetArm(-.75));
+
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(180));
+
+      bigSequence->AddStep(new TimeDriveHold(0, -0.5, 3.2));
+      bigSequence->AddStep(new WaitSeconds(20));
+    }
+    else if (selectedAuto == "double right"){
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(.5));
+      bigSequence->AddStep(new ResetNavXYaw);
+      bigSequence->AddStep(new TurnToAbsoluteAngle(15));
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+
+      bigSequence->AddStep(new WaitSeconds(.2));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(185));
+      bigSequence->AddStep(new WaitSeconds(.1));
+
+      bigSequence->AddStep(new SetArm(.5));
+      bigSequence->AddStep(new SetClaw(-.5));
+      bigSequence->AddStep(new TimeDriveHold(-0.08, -1, 2.7));
+
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(.05));
+      bigSequence->AddStep(new SetClaw(1));
+
+      bigSequence->AddStep(new TurnToAbsoluteAngle(-15));
+      bigSequence->AddStep(new WaitSeconds(.15));
+
+      bigSequence->AddStep(new SetClaw(0));   
+
+      bigSequence->AddStep(new TimeDriveHold(0.08, 1, 2.7));
+      bigSequence->AddStep(new SetArm(-.75));
+
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(180));
+
+      bigSequence->AddStep(new TimeDriveHold(0, -0.5, 3.2));
+      bigSequence->AddStep(new WaitSeconds(20));
+
+    }
+    else if (selectedAuto == "test triple") {
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(.5));
+      bigSequence->AddStep(new ResetNavXYaw);
+
+
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+      bigSequence->AddStep(new WaitSeconds(.2));
+
+      bigSequence->AddStep(new SetArm(.5));
+
+      bigSequence->AddStep(new MoveAndTurn(0, -1, 185, 3.2, false));
+
+      bigSequence->AddStep(new SetArm(.05));
+      bigSequence->AddStep(new SetClaw(.5));
+      bigSequence->AddStep(new MoveAndTurn(-0.1, 1, 15, 2.5, false));
+      
+      bigSequence->AddStep(new SetClaw(0)); 
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+      bigSequence->AddStep(new SetClaw(-.5));
+      bigSequence->AddStep(new MoveAndTurn(0.05, -1, 270, 2.5, false));
+      bigSequence->AddStep(new SetArm(.5));
+      bigSequence->AddStep(new MoveAndTurn(0.5, 0, 270, 2.2, false));
+      bigSequence->AddStep(new SetArm(0.05));
+      bigSequence->AddStep(new MoveAndTurn(-0.5, 0, -15, 2.2, false));
+      bigSequence->AddStep(new SetClaw(.5));
+      bigSequence->AddStep(new MoveAndTurn(0, 1, -15, 2.5, false));
+      bigSequence->AddStep(new SetArm(-.5));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+      bigSequence->AddStep(new MoveAndTurn(0, -1, 180, 2.5, false));
+      bigSequence->AddStep(new WaitSeconds(20));
+    }
+    else if (selectedAuto == "test double level"){
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(.5));
+      bigSequence->AddStep(new ResetNavXYaw);
+
+      bigSequence->AddStep(new SetArm(-.75));
+      bigSequence->AddStep(new WaitSeconds(.1));
+      bigSequence->AddStep(new SetArm(0));
+
+      bigSequence->AddStep(new SetClaw(-.5));
+      bigSequence->AddStep(new SetArm(.75));
+      bigSequence->AddStep(new MoveAndTurn(0.04, -.5, 180, 4.3, false));
+
+      bigSequence->AddStep(new SetArm(0.05));
+      bigSequence->AddStep(new SetClaw(.5));
+      bigSequence->AddStep(new MoveAndTurn(-0.04, .5, 0, 2.5, false));
+
+      bigSequence->AddStep(new SetArm(.75));
+      bigSequence->AddStep(new SetClaw(0));
+      bigSequence->AddStep(new WaitSeconds(.2));
+      bigSequence->AddStep(new SetArm(0));
+
+      bigSequence->AddStep(new level2());
+      bigSequence->AddStep(new WaitSeconds(20));
+    }
+    else if (selectedAuto == "test movement"){
+      bigSequence->AddStep(new CalibrateNavXThenReset);
+      bigSequence->AddStep(new WaitSeconds(.5));
+      bigSequence->AddStep(new ResetNavXYaw);
+      bigSequence->AddStep(new WaitSeconds(1));
+      bigSequence->AddStep(new MoveAndTurn(0, -1, 270, 3, false));
+      bigSequence->AddStep(new WaitSeconds(1));
+      bigSequence->AddStep(new TurnToAbsoluteAngle(90));
+      bigSequence->AddStep(new MoveAndTurn(1, 0, 0, 3, false));
     }
     bigSequence->AddStep(new Stop);
     bigSequence->Init();
 
 
 }
-
 void Robot::AutonomousPeriodic() {
   /* if (m_autoSelected == kAutoNameCustom) {
     // Custom Auto goes here
@@ -160,41 +332,46 @@ void Robot::TeleopPeriodic() {
         Controller::forceControllerXYZToZeroInDeadzone(x, y, z);
 
         if (playerOne->GetRawButton(2)) {
-
             frc::SmartDashboard::PutNumber("z", z);
         }
         else {
 
             z *= R_controllerZMultiplier;
         }
-
+//        if (playerOne->GetRawButton(11)) {
+//          frc::SmartDashboard::PutNumber("Angle Value", NavX::GetInstance().getRoll());
+//          double RollAngleRadius = NavX::GetInstance().getRoll() * (M_PI / 125);
+//          SwerveTrain::GetInstance().Drive(0, (RollAngleRadius * -1), 0, false, false, 1); 
+//        }
         SwerveTrain::GetInstance().Drive(
             -x,
             -y,
             z,
-            playerOne->GetRawButton(5),
+            playerOne->GetRawButton(1),
             playerOne->GetRawButton(3),
             -(((playerOne->GetThrottle() + 1.0) / 2.0) - 1.0)
         );
     }
+/*
+  if(playerTwo->GetLeftTriggerAxis() > .25){
+    Arm::GetInstance().ArmSpeed(.5 * playerTwo->GetLeftTriggerAxis());
+    if(Arm::GetInstance().Current() > 19){
+      playerTwo->SetRumble(frc::GenericHID::RumbleType::kLeftRumble, .5);
+    }
+    else{
+      playerTwo->SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
+    }
 
-  if(playerTwo->GetAButtonPressed()){
-    Arm::GetInstance().ArmSetPosition(frc::SmartDashboard::GetNumber("Distance of the Arm Acuator", .35));
-  }
-  else if(playerTwo->GetLeftTriggerAxis() > .25){
-    Arm::GetInstance().ArmSpeed(playerTwo->GetLeftTriggerAxis()); // arm up
   }
   else if(playerTwo->GetRightTriggerAxis() > .25){
-    Arm::GetInstance().ArmSpeed(-playerTwo->GetRightTriggerAxis()); // arm down
+    Arm::GetInstance().ArmSpeed(-(playerTwo->GetRightTriggerAxis()));
   }
   else{
-    Arm::GetInstance().ArmSpeed(0);
+    Arm::GetInstance().ArmSpeed(.05);
+    playerTwo->SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
   }
 
-  if(playerTwo->GetBackButton()){
-    Arm::GetInstance().ArmSetPosition(frc::SmartDashboard::GetNumber("Distance of the Claw Acuator", .15));
-  }
-  else if(playerTwo->GetRightBumper()){
+  if(playerTwo->GetRightBumper()){
 
     Claw::GetInstance().ClawTiltSpeed(-1); // claw tilt up
   }
@@ -202,13 +379,33 @@ void Robot::TeleopPeriodic() {
     Claw::GetInstance().ClawTiltSpeed(1); // claw tilt down
   }
   else{
+
+
     Claw::GetInstance().ClawTiltSpeed(0);
   }
-  
-  if(playerTwo->GetYButtonPressed()){
-    Claw::GetInstance().SwitchPneumatics();
+*/
+//Braylon's Controller Code (comment out if need other controller code (above) DO NOT DELETE, please and thank you :) )
+  if (playerTwo->GetLeftTriggerAxis() > .25){
+    Arm::GetInstance().ArmSpeed(-(playerTwo->GetLeftTriggerAxis()));
+    Claw::GetInstance().Idle(); // set claw to idle
+  } else if (playerTwo->GetRightTriggerAxis() > .25){
+    Arm::GetInstance().ArmSpeed(playerTwo->GetRightTriggerAxis() * .55);
+    Claw::GetInstance().ClawTiltPositionDown(.505);
+    if (Arm::GetInstance().Current() > 20){
+      playerTwo->SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0.5);
+
+    }
+  } else {
+    Arm::GetInstance().ArmSpeed(.05);
+    playerTwo->SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
+    Claw::GetInstance().ClawTiltPositionUp(.73);
   }
+
+  Claw::GetInstance().Update();
+
 }
+
+
 
 
 void Robot::DisabledInit() {}

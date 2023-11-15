@@ -4,19 +4,19 @@
 
 #include "Claw.h"
 
-class SwitchPneumatics : public AutoStep {
+class SetClaw3 : public AutoStep {
 
     public:
-        SwitchPneumatics() : AutoStep("SwitchPneumatics") {
+        SetClaw3() : AutoStep("SetClaw2") {
 
-        
+
         }
 
         void Init() {}
 
         bool Execute() {
 
-            Claw::GetInstance().SwitchPneumatics();
+            Claw::GetInstance().ClawTiltPositionDown(.9925);
             return true;
         }
 

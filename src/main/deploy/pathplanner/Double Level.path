@@ -1,0 +1,107 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8435291649470598,
+        "y": 2.790251743128307
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.377085675712007,
+        "y": 3.270540977601213
+      },
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.680727883567037,
+        "y": 3.201928229819369
+      },
+      "prevControl": {
+        "x": 6.772211547276161,
+        "y": 3.1104445661102447
+      },
+      "nextControl": {
+        "x": 6.772211547276161,
+        "y": 3.1104445661102447
+      },
+      "holonomicAngle": 17.818888914522766,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.867605224511448,
+        "y": 2.6530262475646205
+      },
+      "prevControl": {
+        "x": 3.798992476729604,
+        "y": 2.9046063227647134
+      },
+      "nextControl": null,
+      "holonomicAngle": -170.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "Shoot"
+      ]
+    },
+    {
+      "position": 0.21818181818178936,
+      "names": [
+        "Claw Down"
+      ]
+    },
+    {
+      "position": 0.7854545454545012,
+      "names": [
+        "PickUp Start"
+      ]
+    },
+    {
+      "position": 1.2218181818181173,
+      "names": [
+        "PickUp Stop",
+        "Claw Mid"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "Shoot",
+        "Level"
+      ]
+    }
+  ]
+}

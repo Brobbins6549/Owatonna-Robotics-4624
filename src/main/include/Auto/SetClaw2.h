@@ -16,7 +16,7 @@ class SetClaw2 : public AutoStep {
 
         bool Execute() {
 
-            Claw::GetInstance().ClawTiltPosition(m_speed);
+            Claw::GetInstance().ClawTiltPositionUp(.9878);
             return true;
         }
 

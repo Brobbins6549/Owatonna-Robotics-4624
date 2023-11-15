@@ -1,0 +1,196 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.9007064547652628,
+        "y": 4.414086773965274
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.769801260001949,
+        "y": 4.619925017310805
+      },
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.79611330376507,
+        "y": 4.663302788144039
+      },
+      "prevControl": {
+        "x": 6.333636994197067,
+        "y": 5.202858482640043
+      },
+      "nextControl": {
+        "x": 6.333636994197067,
+        "y": 5.202858482640043
+      },
+      "holonomicAngle": -12.724355685422342,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.1408510720017158,
+        "y": 4.608489559347165
+      },
+      "prevControl": {
+        "x": 2.8384140077837925,
+        "y": 4.368344942110712
+      },
+      "nextControl": {
+        "x": 1.443288136219639,
+        "y": 4.848634176583618
+      },
+      "holonomicAngle": 149.3935929684906,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.069533454330818,
+        "y": 3.727959296146837
+      },
+      "prevControl": {
+        "x": 7.442154777962794,
+        "y": 5.218444590674784
+      },
+      "nextControl": {
+        "x": 7.035227080439897,
+        "y": 3.5907338005831497
+      },
+      "holonomicAngle": -88.66778014613044,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.198028361819919,
+        "y": 4.4026513160016325
+      },
+      "prevControl": {
+        "x": 6.211874107057773,
+        "y": 5.935002683129475
+      },
+      "nextControl": {
+        "x": 2.037777369518565,
+        "y": 4.341472874496272
+      },
+      "holonomicAngle": -144.86743923946906,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.378290819349115,
+        "y": 4.962988756220023
+      },
+      "prevControl": {
+        "x": 6.989485248585334,
+        "y": 6.049357262765881
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "Shoot",
+        "Lower"
+      ]
+    },
+    {
+      "position": 0.8436363636362988,
+      "names": [
+        "PickUp Start"
+      ]
+    },
+    {
+      "position": 1.1927272727272047,
+      "names": [
+        "PickUp Stop",
+        "Half Claw"
+      ]
+    },
+    {
+      "position": 2.0654545454545437,
+      "names": [
+        "Shoot",
+        "Lower"
+      ]
+    },
+    {
+      "position": 2.909090909090836,
+      "names": [
+        "Pickup Start"
+      ]
+    },
+    {
+      "position": 3.258181818181694,
+      "names": [
+        "PickUp Stop",
+        "Half Claw"
+      ]
+    },
+    {
+      "position": 4.0,
+      "names": [
+        "Shoot"
+      ]
+    }
+  ]
+}
